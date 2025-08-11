@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Inter";
+  src: url("/inter/thin.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/inter/regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/inter/semibold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/** {*/
+/*  box-sizing: border-box;*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*}*/
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Inter",
+    sans-serif;
+  letter-spacing: -2%;
+  @apply bg-neutral-100;
+}
+
+::selection {
+  @apply bg-neutral-950 text-neutral-50;
+}
+
+img {
+  @apply select-none;
+}
+
+a:not(.exclude) {
+  text-decoration-style: wavy;
+  @apply underline decoration-neutral-300;
+}
+
+.clock {
+  --seconds-deg: calc((var(--now-s) / 60) * 360);
+  --minutes-deg: calc(((var(--now-m) / 60) * 360) + ((var(--now-s) / 60) * 6));
+  --hours-deg: calc(((var(--now-h) / 12) * 360) + ((var(--now-m) / 60) * 30));
+  @apply relative m-0 flex h-5 w-5 rotate-180 items-center justify-center rounded-full border border-neutral-400;
+}
+
+.clock > * {
+  @apply absolute left-1/2 top-1/2 rounded-full bg-neutral-500 [transform-origin:center_0];
+}
+
+.seconds {
+  @apply h-2 w-px;
+  transform: rotate(calc(var(--seconds-deg) * 1deg));
+}
+
+.minutes {
+  @apply h-1.5 w-px;
+  transform: rotate(calc(var(--minutes-deg) * 1deg));
+}
+
+.hours {
+  transform: rotate(calc(var(--hours-deg) * 1deg));
+  @apply h-1 w-px;
+}
+
+/* Add to your global.css file to remove underlines and improve styling */
+
+/* Remove underlines from all links by default */
+a {
+  text-decoration: none !important;
+}
+
+/* Remove underlines on hover for all links */
+a:hover {
+  text-decoration: none !important;
+}
+
+/* Ensure navigation and blog links never have underlines */
+nav a,
+.blog-link,
+header a,
+article a {
+  text-decoration: none !important;
+}
+
+nav a:hover,
+.blog-link:hover,
+header a:hover,
+article a:hover {
+  text-decoration: none !important;
+}
+
+/* Specifically target blog post titles */
+article h2 a,
+article h2 a:hover {
+  text-decoration: none !important;
+}
+
+/* Only show underlines for content links inside prose if explicitly needed */
+.prose a.content-link:hover {
+  text-decoration: underline;
+}
+
+/* Custom prose styles for blog content */
+.prose {
+  color: #404040;
+  line-height: 1.7;
+}
+
+.prose p {
+  margin-bottom: 1.25rem;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-weight: 500;
+  color: #171717;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+/* Blog-specific animations */
+@keyframes intro {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-intro {
+  animation: intro 0.6s ease-out forwards;
+}
+
+/* Ensure consistent font weights */
+.font-light {
+  font-weight: 300;
+}
+
+.font-medium {
+  font-weight: 500;
+}

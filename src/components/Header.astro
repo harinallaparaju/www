@@ -1,0 +1,57 @@
+---
+import Link from './icons/Link.astro'
+---
+
+<header>
+  <h1 class='mb-6 animate-intro font-semibold'>Surya Nallaparaju</h1>
+  <div class='flex flex-col gap-y-3.5'>
+    <p
+      class='animate-intro font-light leading-snug opacity-0 [animation-delay:0.2s]'
+    >
+      I'm an MTech Computer Science student (currently) at NIT Warangal. This is my lil
+      corner of the web where I share my work with y'all.
+    </p>
+    <div
+      class='flex animate-intro items-center font-light opacity-0 [animation-delay:0.25s]'
+    >
+
+    </div>
+    <p class='animate-intro font-light opacity-0 [animation-delay:0.3s]'>
+      In my free time, I spend time outdoors, listen to podcasts and music, eat (a lot), and tinker
+      around with all sorts of random computer stuff.
+    </p>
+
+    <!-- Clean Navigation -->
+    <nav class="mt-6 animate-intro opacity-0 [animation-delay:0.35s]">
+      <div class="flex flex-wrap gap-x-6 gap-y-2">
+        <a
+          href="/blog/"
+          class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-yellow-600 hover:translate-x-1"
+        >
+          <span>Blog</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+        <a
+          href="/gallery/"
+          class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-blue-600 hover:translate-x-1"
+        >
+          <span>Gallery</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+        <a
+          href="/resume.pdf"
+          class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-green-600 hover:translate-x-1"
+        >
+          <span>Resume</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>

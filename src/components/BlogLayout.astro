@@ -1,0 +1,127 @@
+---
+// src/components/BlogLayout.astro
+import '../global.css';
+import Footer from './Footer.astro';
+import Index from './icons/Index.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pubDate?: string;
+}
+
+const {
+  title = "",
+  description = "Blog post description",
+  pubDate
+} = Astro.props;
+
+const formattedDate = pubDate
+  ? new Date(pubDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  : null;
+
+const getRelativeTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 30) {
+    return `${diffDays}d ago`;
+  } else if (diffDays < 365) {
+    const months = Math.floor(diffDays / 30);
+    return `${months}mo ago`;
+  } else {
+    const years = Math.floor(diffDays / 365);
+    return `${years}y ago`;
+  }
+};
+
+const relativeTime = pubDate ? getRelativeTime(pubDate) : null;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<html lang='en'>
+<head>
+  <meta charset='utf-8' />
+  <link rel='sitemap' href='/sitemap-index.xml' />
+  <meta name='generator' content={Astro.generator} />
+  <title>{title} | Surya Nallaparaju</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <meta name='description' content={description} />
+  {/* FIX: Use .href to pass the string URL */}
+  <link rel='canonical' href={canonicalURL.href} />
+  <meta property='og:title' content={title} />
+  <meta property='og:description' content={description} />
+  {/* FIX: Use .href to pass the string URL */}
+  <meta property='og:url' content={canonicalURL.href} />
+  <meta property='og:type' content='article' />
+</head>
+
+<body class="bg-neutral-50 antialiased">
+<div class='flex justify-center'>
+  <div class='mt-16 flex min-h-screen w-[90vw] flex-col xs:w-[500px] max-w-4xl'>
+
+    <!-- Header with navigation -->
+    <header class="mb-1">
+      <div class="flex items-center gap-4">
+        <a
+          class="flex items-center text-neutral-500 hover:text-neutral-800 transition-colors text-base font-light"
+          href="/blog/"
+        >
+          <Index />
+          <span class="ml-1">Blog</span>
+        </a>
+        <span class="text-neutral-300">|</span>
+        <a
+          class="text-neutral-500 hover:text-neutral-800 transition-colors text-base font-light"
+          href="/"
+        >
+          Home
+        </a>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <article class="max-w-prose">
+        <!-- Article header -->
+        <header class="mb-8">
+          <h1 class="text-2xl font-medium text-neutral-900 mb-3 leading-tight">
+            {title}
+          </h1>
+          {formattedDate && (
+            <div class="text-sm text-neutral-500 font-light">
+              {/* FIX: Add ! to assert pubDate is not null here */}
+              <time datetime={new Date(pubDate!).toISOString()}>
+                {formattedDate} ({relativeTime})
+              </time>
+            </div>
+          )}
+        </header>
+
+        <!-- Article content -->
+        <div class="prose prose-neutral max-w-none">
+          <slot />
+        </div>
+      </article>
+    </main>
+
+    <Footer />
+  </div>
+</div>
+
+<!-- Blur effects -->
+<div
+  class='fixed top-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur'
+  aria-hidden='true'>
+</div>
+<div
+  class='fixed bottom-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur dark:bottom-[-20px]'
+  aria-hidden='true'>
+</div>
+</body>
+</html>
