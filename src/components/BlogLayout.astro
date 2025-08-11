@@ -3,6 +3,7 @@
 import '../global.css';
 import Footer from './Footer.astro';
 import Index from './icons/Index.astro';
+import { Analytics } from '@vercel/analytics/react';
 
 interface Props {
   title?: string;
@@ -122,6 +123,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <div
   class='fixed bottom-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur dark:bottom-[-20px]'
   aria-hidden='true'>
+  <Analytics />
 </div>
+
 </body>
 </html>
