@@ -1,5 +1,5 @@
 ---
-layout: /Users/haritejanallaparaju/Documents/Projects/www/src/components/BlogLayout.astro
+layout: '../../components/BlogLayout.astro'
 title: 👋 Welcome to my corner of the internet
 description: 
 pubDate: 2025-08-10
