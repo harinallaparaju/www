@@ -3,6 +3,13 @@ dist/
 # generated types
 .astro/
 
+# Ignore all lockfiles to force server-side generation
+package-lock.json
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
 # dependencies
 node_modules/
 
