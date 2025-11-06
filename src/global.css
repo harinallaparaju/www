@@ -2,14 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Inter";
-  src: url("/inter/thin.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
+/* Font faces */
 @font-face {
   font-family: "Inter";
   src: url("/inter/regular.woff2") format("woff2");
@@ -17,29 +10,19 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Inter";
   src: url("/inter/semibold.woff2") format("woff2");
-  font-weight: normal;
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
-/** {*/
-/*  box-sizing: border-box;*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*}*/
-
+/* Base body styles */
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    "Inter",
-    sans-serif;
-  letter-spacing: -2%;
-  @apply bg-neutral-100;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  letter-spacing: -0.02em;
+  @apply bg-neutral-100 text-neutral-800;
 }
 
 ::selection {
@@ -50,76 +33,15 @@ img {
   @apply select-none;
 }
 
-a:not(.exclude) {
-  text-decoration-style: wavy;
-  @apply underline decoration-neutral-300;
-}
-
-.clock {
-  --seconds-deg: calc((var(--now-s) / 60) * 360);
-  --minutes-deg: calc(((var(--now-m) / 60) * 360) + ((var(--now-s) / 60) * 6));
-  --hours-deg: calc(((var(--now-h) / 12) * 360) + ((var(--now-m) / 60) * 30));
-  @apply relative m-0 flex h-5 w-5 rotate-180 items-center justify-center rounded-full border border-neutral-400;
-}
-
-.clock > * {
-  @apply absolute left-1/2 top-1/2 rounded-full bg-neutral-500 [transform-origin:center_0];
-}
-
-.seconds {
-  @apply h-2 w-px;
-  transform: rotate(calc(var(--seconds-deg) * 1deg));
-}
-
-.minutes {
-  @apply h-1.5 w-px;
-  transform: rotate(calc(var(--minutes-deg) * 1deg));
-}
-
-.hours {
-  transform: rotate(calc(var(--hours-deg) * 1deg));
-  @apply h-1 w-px;
-}
-
-/* Add to your global.css file to remove underlines and improve styling */
-
-/* Remove underlines from all links by default */
 a {
   text-decoration: none !important;
+  color: inherit;
 }
-
-/* Remove underlines on hover for all links */
 a:hover {
-  text-decoration: none !important;
-}
-
-/* Ensure navigation and blog links never have underlines */
-nav a,
-.blog-link,
-header a,
-article a {
-  text-decoration: none !important;
-}
-
-nav a:hover,
-.blog-link:hover,
-header a:hover,
-article a:hover {
-  text-decoration: none !important;
-}
-
-/* Specifically target blog post titles */
-article h2 a,
-article h2 a:hover {
-  text-decoration: none !important;
-}
-
-/* Only show underlines for content links inside prose if explicitly needed */
-.prose a.content-link:hover {
   text-decoration: underline;
 }
 
-/* Custom prose styles for blog content */
+/* Prose content */
 .prose {
   color: #404040;
   line-height: 1.7;
@@ -151,27 +73,96 @@ article h2 a:hover {
   line-height: 1.75rem;
 }
 
-/* Blog-specific animations */
+/* Fade-in animation */
 @keyframes intro {
-  0% {
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
 .animate-intro {
   animation: intro 0.6s ease-out forwards;
 }
 
-/* Ensure consistent font weights */
-.font-light {
-  font-weight: 300;
+/* Clock animation from your earlier design */
+.clock {
+  --seconds-deg: calc((var(--now-s) / 60) * 360);
+  --minutes-deg: calc(((var(--now-m) / 60) * 360) + ((var(--now-s) / 60) * 6));
+  --hours-deg: calc(((var(--now-h) / 12) * 360) + ((var(--now-m) / 60) * 30));
+  @apply relative m-0 flex h-5 w-5 rotate-180 items-center justify-center rounded-full border border-neutral-400;
+}
+.clock > * {
+  @apply absolute left-1/2 top-1/2 rounded-full bg-neutral-500 [transform-origin:center_0];
+}
+.seconds { @apply h-2 w-px; transform: rotate(calc(var(--seconds-deg) * 1deg)); }
+.minutes { @apply h-1.5 w-px; transform: rotate(calc(var(--minutes-deg) * 1deg)); }
+.hours { @apply h-1 w-px; transform: rotate(calc(var(--hours-deg) * 1deg)); }
+
+/* Clean Apple-like lightbox */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
-.font-medium {
-  font-weight: 500;
+.lightbox-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img {
+  max-width: 92%;
+  max-height: 88%;
+  border-radius: 12px;
+  transform: scale(0.97);
+  transition: transform 0.3s cubic-bezier(.2,.9,.3,1);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+}
+
+.lightbox-backdrop.show .lightbox-img {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 60;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #f3f3f3;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-pill:hover,
+.tag-pill.active {
+  background: #e5e5e5;
+  border-color: rgba(0,0,0,0.12);
 }

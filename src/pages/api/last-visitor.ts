@@ -1,28 +1,42 @@
 import type { APIRoute } from "astro";
 
-export const prerender = false;
+const DEFAULT_BACKEND = import.meta.env.PUBLIC_BASE_URL || "http://localhost:4321";
 
-const locate = async () => {
+/**
+ * Returns { result: "<country, city or fallback>" }
+ * This is intentionally tolerant: if the upstream service is unreachable,
+ * we return a friendly fallback instead of crashing.
+ */
+export const get: APIRoute = async ({ request }) => {
   try {
-    const response = await fetch(
-      `${import.meta.env.UPSTASH_REDIS_REST_URL}/get/visitor/`,
-      {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.UPSTASH_REDIS_REST_TOKEN}`,
-        },
-      },
-    );
+    // If you used a different path earlier, place it in PUBLIC_BASE_URL (e.g. https://example.com)
+    const base = DEFAULT_BACKEND.replace(/\/$/, "");
+    // Example endpoint path - your existing backend might be different.
+    // We'll call `${base}/get/visitor` safely.
+    const url = `${base}/get/visitor`;
 
-    const data = await response.json();
+    // Timeout wrapper 3s
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 3000);
 
-    if (data.result.includes("undefined"))
-      return new Response(JSON.stringify({ result: "null" }), { status: 400 });
+    const res = await fetch(url, { signal: controller.signal }).finally(() => clearTimeout(id));
+    if (!res.ok) {
+      // upstream failed; return fallback
+      return new Response(JSON.stringify({ result: "Unknown" }), { status: 200 });
+    }
 
-    return data;
-  } catch (error) {
-    return console.error("Error saving to Upstash:", error);
+    const json = await res.json().catch(() => ({ result: "Unknown" }));
+    const result = json?.result || json?.location || "Unknown";
+
+    return new Response(JSON.stringify({ result }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    // Never throw to the renderer; return safe fallback
+    return new Response(JSON.stringify({ result: "Unknown" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
-
-export const GET: APIRoute = async () =>
-  new Response(JSON.stringify({ ...(await locate()) }));

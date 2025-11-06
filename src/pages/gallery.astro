@@ -1,0 +1,75 @@
+---
+import Layout from '../components/Layout.astro';
+
+const images = import.meta.glob('../../public/gallery/*.{jpg,jpeg,png,webp}', { eager: true, as: 'url' });
+const items = Object.values(images);
+
+// small helper for captions (you can supply filename-based captions)
+const captionFrom = (src) => src.split('/').pop();
+---
+<Layout title="Gallery">
+  <header class="mb-6">
+    <h1 class="text-2xl font-semibold">Gallery</h1>
+    <p class="mt-2 text-neutral-600 font-light">A few photos and experiments.</p>
+  </header>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    {items.map((src, idx) => (
+      <button class="rounded-lg overflow-hidden border border-neutral-200 bg-white p-0" on:click={`openLightbox(${idx})`} aria-label={`Open image ${idx + 1}`}>
+        <img src={src} alt={captionFrom(src)} class="w-full h-56 object-cover transition-transform hover:scale-105" loading="lazy" />
+      </button>
+    ))}
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-backdrop" role="dialog" aria-hidden="true">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Close (Esc)">✕</button>
+    <div class="lightbox-nav">
+      <button id="prev-btn" class="lightbox-arrow" aria-label="Previous image">←</button>
+      <button id="next-btn" class="lightbox-arrow" aria-label="Next image">→</button>
+    </div>
+    <img id="lightbox-img" class="lightbox-img" alt="Lightbox image" />
+  </div>
+
+  <script is:inline>
+    (function () {
+      const items = JSON.parse(decodeURIComponent("{{ encodeURIComponent(JSON.stringify(items)) }}"));
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      const prev = document.getElementById('prev-btn');
+      const next = document.getElementById('next-btn');
+      const close = document.getElementById('lightbox-close');
+      let idx = 0;
+
+      const show = (i) => {
+        idx = (i + items.length) % items.length;
+        img.src = items[idx];
+        lightbox.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        img.style.transform = 'scale(1.06)';
+        requestAnimationFrame(() => img.style.transform = 'scale(1)'); // zoom-in
+      };
+      const hide = () => {
+        lightbox.classList.remove('show');
+        document.body.style.overflow = '';
+      };
+
+      window.openLightbox = (i) => show(i);
+
+      prev.addEventListener('click', () => show(idx - 1));
+      next.addEventListener('click', () => show(idx + 1));
+      close.addEventListener('click', hide);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) hide();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('show')) return;
+        if (e.key === 'Escape') hide();
+        if (e.key === 'ArrowLeft') show(idx - 1);
+        if (e.key === 'ArrowRight') show(idx + 1);
+      });
+    })();
+  </script>
+</Layout>

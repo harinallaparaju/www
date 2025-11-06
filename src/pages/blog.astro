@@ -1,0 +1,63 @@
+---
+import Layout from "../components/Layout.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+const allTags = Array.from(new Set(posts.flatMap(p => p.data.tags || []))).sort();
+---
+
+<Layout title="Blog" description="Thoughts, notes & experiments by Surya Nallaparaju">
+  <section>
+    <h1 class="text-2xl font-medium text-neutral-900 mb-6 animate-intro">Writing</h1>
+
+    {posts.length === 0 ? (
+      <p class="text-neutral-500">No posts yet — stay tuned!</p>
+    ) : (
+      <div class="space-y-10">
+        <!-- Tag pills row -->
+        <div class="flex flex-wrap gap-2 mb-4 animate-intro delay-1">
+          <a href="/blog/" class="tag-pill">All</a>
+          {allTags.map(tag => (
+            <a href={`/blog/tags/${tag}`} class="tag-pill">{tag}</a>
+          ))}
+        </div>
+
+        <!-- Posts list -->
+        <ul class="space-y-6">
+          {posts
+            .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate))
+            .map(({ id, data }) => (
+              <li class="reveal">
+                <a href={`/blog/${id.replace('.md', '')}/`} class="block group">
+                  <h2 class="text-lg font-medium text-neutral-900 mb-1 group-hover:text-neutral-600 transition-colors">
+                    {data.title}
+                  </h2>
+                  <p class="text-neutral-500 text-sm leading-snug">
+                    {data.description}
+                  </p>
+                  <span class="text-xs text-neutral-400 mt-1 block">
+                    {new Date(data.pubDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                </a>
+              </li>
+            ))}
+        </ul>
+      </div>
+    )}
+  </section>
+</Layout>
+
+<script>
+  // Reveal animation on scroll (Apple-like fade-in)
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add("show");
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+</script>
