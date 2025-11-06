@@ -1,5 +1,7 @@
 import { ImageResponse } from '@vercel/og';
 
+export const prerender = false;
+
 export const config = {
   runtime: 'edge',
 };
