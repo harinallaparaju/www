@@ -1,50 +1,128 @@
 ---
 import Link from './icons/Link.astro';
 
-const isHome = Astro.url.pathname === '/';
+const path = Astro.url.pathname;
+const isHome = path === '/';
 ---
 
 <header
   class:list={[
     'animate-intro transition-all duration-300',
-    isHome ? 'mt-8' : 'mt-8', // Adds top breathing room below cloud
+    isHome ? 'mt-8' : 'mt-8', // Keeps breathing space below clouds
   ]}
 >
   <div class="flex flex-col justify-center w-[90vw] xs:w-[500px] max-w-4xl mx-auto">
-    {(
-      // Minimal header for blog/gallery pages
-      <nav class="mt-4 mb-2 flex justify-center">
-        <div class="flex flex-wrap gap-x-6 gap-y-2">
-          <a
-            href="/"
-            class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-neutral-900 hover:translate-x-1"
-          >
-            <span>Home</span>
-            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-              <Link />
-            </div>
-          </a>
-          <a
-            href="/blog/"
-            class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-yellow-600 hover:translate-x-1"
-          >
-            <span>Blog</span>
-            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-              <Link />
-            </div>
-          </a>
-          <a
-            href="/gallery/"
-            class="group flex items-center gap-1 font-medium text-neutral-700 transition-all hover:text-blue-600 hover:translate-x-1"
-          >
-            <span>Gallery</span>
-            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-              <Link />
-            </div>
-          </a>
-          
-        </div>
-      </nav>
-    )}
+    <nav class="mt-4 mb-2 flex justify-center">
+      <div class="flex flex-wrap gap-x-6 gap-y-2">
+        <!-- Home -->
+        <a
+          href="/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path === '/' ? 'text-neutral-900 active-link' : 'text-neutral-700 hover:text-neutral-900'
+          ]}
+        >
+          <span>Home</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+
+        <!-- Blog -->
+        <a
+          href="/blog/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/blog')
+              ? 'text-yellow-600 active-link'
+              : 'text-neutral-700 hover:text-yellow-600'
+          ]}
+        >
+          <span>Blog</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+
+        <!-- Gallery -->
+        <a
+          href="/gallery/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/gallery')
+              ? 'text-blue-600 active-link'
+              : 'text-neutral-700 hover:text-blue-600'
+          ]}
+        >
+          <span>Gallery</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+
+        <a
+          href="/bookshelf/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/bookshelf')
+              ? 'text-orange-600 active-link'
+              : 'text-neutral-700 hover:text-orange-600'
+          ]}
+        >
+      <span>Bookshelf</span>
+      <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+        <Link />
+      </div>
+    </a>
+
+    <a
+          href="/papershelf/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/papershelf')
+              ? 'text-purple-600 active-link'
+              : 'text-neutral-700 hover:text-purple-600'
+          ]}
+        >
+      <span>Papershelf</span>
+      <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+        <Link />
+      </div>
+    </a>
+
+      </div>
+    </nav>
   </div>
 </header>
+
+<style is:global>
+  .active-link {
+    position: relative;
+  }
+
+  /* Only underline the text span, not the icon */
+  .active-link > span {
+    position: relative;
+    display: inline-block;
+  }
+
+  .active-link > span::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 2px;
+    width: 100%;
+    max-width: 100%;
+    background: currentColor;
+    border-radius: 2px;
+    opacity: 0.45;
+    transition: width 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* Optional hover accent (Apple style) */
+  .group:hover > span::after {
+    opacity: 0.7;
+  }
+</style>

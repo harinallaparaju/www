@@ -1,0 +1,31 @@
+---
+import Layout from "../components/Layout.astro";
+import books from "../data/books.json";
+---
+
+<Layout>
+  <section>
+    <h1 class="text-2xl font-semibold mb-2">Bookshelf</h1>
+    <p class="text-neutral-600 font-light mb-6">
+    A living collecion of books I've read and loved - or am currently exploring. 
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+      {books.map(book => (
+        <div class="group">
+          <div class="aspect-[2/3] w-full overflow-hidden rounded-lg shadow-sm bg-neutral-200">
+        <img
+            src={book.cover}
+            alt={book.title}
+            class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+            loading="lazy"
+        />
+        </div>
+          <h3 class="mt-2 text-sm font-medium">{book.title}</h3>
+          <p class="text-xs text-neutral-500">{book.author}</p>
+          <p class="text-xs italic text-neutral-400">{book.status}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>

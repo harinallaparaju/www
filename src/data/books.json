@@ -1,0 +1,23 @@
+[
+    {
+        "title": "Atomic Habits",
+        "author": "James Clear",
+        "cover": "/books/atomic-habits.jpg",
+        "status": "Currently Reading",
+        "note": "Tiny changes, remarkable results."
+    },
+    {
+        "title": "Deep Work",
+        "author": "Cal Newport",
+        "cover": "/books/deep-work.jpg",
+        "status": "Currently Reading",
+        "note": "Rules for focused success in a distracted world."
+    },
+    {
+        "title": "Shoe Dog",
+        "author": "Phil Knight",
+        "cover": "/books/shoe-dog.jpg",
+        "status": "Currently Reading",
+        "note": "A memoir by the creator of nike."
+    }
+]

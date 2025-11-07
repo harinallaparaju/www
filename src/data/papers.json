@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Decoding ECC-based Fuzzy Vault for Biometric Security",
+    "type": "Paper Dissection",
+    "source": "IEEE 2024",
+    "year": "2024",
+    "tags": ["biometrics", "elliptic curve", "blockchain"],
+    "link": "https://arxiv.org/abs/2403.01845",
+    "summary": "A visual and intuitive breakdown of how the elliptic-curve-based fuzzy vault strengthens biometric authentication on decentralized systems."
+  },
+  {
+    "title": "A Deep Dive into Hyperledger Fabric and IPFS Integration",
+    "type": "Engineering Blog",
+    "source": "The Portl Lab",
+    "year": "2025",
+    "tags": ["hyperledger", "ipfs", "blockchain"],
+    "link": "https://theportl.tech/blog/hyperledger-ipfs",
+    "summary": "My notes on designing a hybrid blockchain-backed data layer using Fabric and IPFS, bridging off-chain and on-chain secure storage."
+  },
+  {
+    "title": "The Fuzzy Vault Scheme: A Mathematical Revisit",
+    "type": "Paper Notes",
+    "source": "Personal Notes",
+    "year": "2025",
+    "tags": ["fuzzy vault", "cryptography", "security"],
+    "link": "#",
+    "summary": "An informal exploration and simplification of the fuzzy vault concept, including ECC variant implementations and limitations."
+  }
+]
