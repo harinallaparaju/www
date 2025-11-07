@@ -1,10 +1,10 @@
 ---
-title: 👋 Welcome to my corner of the internet
+title: Welcome to my corner of the internet
 description: "This is my first post."
 pubDate: 2025-08-10
 tags: ["project"]
 ---
-Surya Nallaparaju, here. And this is my space on the internet. 👋
+Surya Nallaparaju, here. And this is my space on the internet.
 
 I've always wanted a place that felt like mine. Somewhere I could write freely, break down ideas I find interesting, document the things I'm building, and just share what's on my mind without overthinking it.
 
