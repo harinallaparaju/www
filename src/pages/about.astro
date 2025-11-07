@@ -1,0 +1,93 @@
+---
+import Layout from "../components/Layout.astro";
+import Link from "../components/icons/Link.astro";
+---
+
+<Layout>
+  <main class="w-[90vw] xs:w-[500px] max-w-4xl mx-auto">
+    <h1 class="text-2xl font-medium mb-2">About</h1>
+    <p class="text-neutral-500 font-light mb-8">
+      A little bit about who I am, what I’m building, and what drives me.
+    </p>
+
+    <section class="space-y-8">
+      <!-- Intro -->
+      <div class="animate-intro">
+        <p class="text-neutral-700 font-light leading-relaxed mb-4">
+          I’m <span class="font-medium text-neutral-900">Surya Nallaparaju</span>, 
+          an MTech Computer Science student at NIT Warangal, and an upcoming Software Engineer Intern.
+          <span class="font-medium text-neutral-900"></span>
+        </p>
+        <p class="text-neutral-700 font-light leading-relaxed mb-4">
+          I believe in building things that last — systems, products, and ideas that 
+          actually make people’s lives better. I’m deeply inspired by design, 
+          engineering, and simplicity.
+        </p>
+        <p class="text-neutral-700 font-light leading-relaxed">
+          Outside of work, I spend time outdoors, read non-fiction, and occasionally 
+          write or tinker with side projects. I love the craft of thinking deeply and 
+          working maniacally fast when something truly excites me.
+        </p>
+      </div>
+
+      <!-- Journey -->
+      <div class="animate-intro">
+        <h2 class="text-lg font-medium mb-3">Journey</h2>
+        <ul class="space-y-3 text-sm text-neutral-600 font-light">
+          <li>MTech in Computer Science — <span class="font-medium text-neutral-800">NIT Warangal</span></li>
+          <li>Upcoming Software Engineer Intern<span class="font-medium text-neutral-800"></span></li>
+          <li>Research — Biometric Security, Cryptography, Blockchain</li>
+        </ul>
+      </div>
+
+      <!-- Philosophy -->
+      <div class="animate-intro">
+        <h2 class="text-lg font-medium mb-3">Philosophy</h2>
+        <p class="text-neutral-700 font-light leading-relaxed">
+          I believe good engineering is as much about clarity as it is about code.  
+          I try to build and think using first principles — breaking problems down, 
+          understanding their essence, and constructing solutions that are both 
+          elegant and efficient.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <div class="animate-intro">
+        <h2 class="text-lg font-medium mb-3">Connect</h2>
+        <div class="flex flex-wrap gap-2">
+          <a
+            href="mailto:hari.nallaparaju@gmail.com"
+            class="tag-pill group hover:bg-neutral-300 transition-all"
+          >
+            Email
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link />
+            </div>
+          </a>
+          <a
+            href="https://github.com/harinallaparaju"
+            target="_blank"
+            rel="noreferrer"
+            class="tag-pill group hover:bg-neutral-300 transition-all"
+          >
+            GitHub
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link />
+            </div>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/surya-narayana-raju-nallaparaju-99b4b2217/"
+            target="_blank"
+            rel="noreferrer"
+            class="tag-pill group hover:bg-neutral-300 transition-all"
+          >
+            LinkedIn
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link />
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

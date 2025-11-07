@@ -1,19 +1,17 @@
 ---
 import Link from './icons/Link.astro';
-
 const path = Astro.url.pathname;
-const isHome = path === '/';
 ---
 
 <header
   class:list={[
     'animate-intro transition-all duration-300',
-    isHome ? 'mt-8' : 'mt-8', // Keeps breathing space below clouds
+    'mt-12', // breathing room below cloud
   ]}
 >
-  <div class="flex flex-col justify-center w-[90vw] xs:w-[500px] max-w-4xl mx-auto">
-    <nav class="mt-4 mb-2 flex justify-center">
-      <div class="flex flex-wrap gap-x-6 gap-y-2">
+  <div class="flex justify-center">
+    <nav class="flex justify-center">
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 max-w-[90vw]">
         <!-- Home -->
         <a
           href="/"
@@ -60,6 +58,7 @@ const isHome = path === '/';
           </div>
         </a>
 
+        <!-- Bookshelf -->
         <a
           href="/bookshelf/"
           class:list={[
@@ -69,13 +68,14 @@ const isHome = path === '/';
               : 'text-neutral-700 hover:text-orange-600'
           ]}
         >
-      <span>Bookshelf</span>
-      <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-        <Link />
-      </div>
-    </a>
+          <span>Bookshelf</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
 
-    <a
+        <!-- Papershelf -->
+        <a
           href="/papershelf/"
           class:list={[
             'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
@@ -84,12 +84,27 @@ const isHome = path === '/';
               : 'text-neutral-700 hover:text-purple-600'
           ]}
         >
-      <span>Papershelf</span>
-      <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-        <Link />
-      </div>
-    </a>
+          <span>Papershelf</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
 
+        <!-- About -->
+        <a
+          href="/about/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/about')
+              ? 'text-green-600 active-link'
+              : 'text-neutral-700 hover:text-green-600'
+          ]}
+        >
+          <span>About</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
       </div>
     </nav>
   </div>

@@ -1,58 +1,83 @@
 ---
 import Layout from "../components/Layout.astro";
 import { getCollection } from "astro:content";
+import Link from "../components/icons/Link.astro";
 
 const posts = await getCollection("blog");
 const sortedPosts = posts.sort(
   (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate)
 );
+
+// Get unique tags from all posts for the filter bar
+const allTags = [
+  ...new Set(posts.flatMap((p) => p.data.tags || []))
+].sort();
 ---
 
 <Layout>
-  <section>
-    <h1 class="text-2xl font-semibold mb-2">Writing</h1>
-    <p class="text-neutral-600 font-light mb-6">
-    Thoughts, stories, and reflections from my learning journey.
+  <main class="w-[90vw] xs:w-[500px] max-w-4xl mx-auto">
+    <h1 class="text-2xl font-medium mb-2">Writing</h1>
+    <p class="text-neutral-500 font-light mb-8">
+      Thoughts, explorations, and learnings in systems, design, and life.
     </p>
 
+    <!-- Tag Filter Row -->
+    {allTags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mb-10">
+        <a href="/blog" class="tag-pill">All</a>
+        {allTags.map((tag) => (
+          <a href={`/blog/tag/${tag.toLowerCase()}`} class="tag-pill">{tag}</a>
+        ))}
+      </div>
+    )}
 
-    <!-- Tag pills row -->
-    <div class="flex gap-2 mb-8">
-      <a href="/blog" class="tag-pill">All</a>
-      <a href="/blog/tag/notes" class="tag-pill">Notes</a>
-      <a href="/blog/tag/projects" class="tag-pill">Projects</a>
-    </div>
+    <!-- Blog List -->
+    <section class="flex flex-col gap-8">
+      {sortedPosts.length > 0 ? (
+        sortedPosts.map((post, i) => (
+          <article
+            class="group opacity-0 animate-intro"
+            style={{ animationDelay: `${0.1 * i}s` }}
+          >
+            <a
+              href={`/blog/${post.slug}/`}
+              class="block group-hover:translate-x-1 transition-transform"
+            >
+              <h2 class="text-lg font-medium text-neutral-900 group-hover:text-yellow-600 flex items-center gap-1">
+                {post.data.title}
+                <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Link />
+                </div>
+              </h2>
+            </a>
 
-    <!-- Blog list -->
-    <div class="space-y-10">
-      {sortedPosts.map(post => (
-        <article class="animate-intro">
-          <a href={`/blog/${post.slug}/`} class="block group">
-            <h2 class="text-xl font-medium group-hover:text-yellow-600 transition-colors">
-              {post.data.title}
-            </h2>
             {post.data.description && (
-              <p class="text-neutral-500 mt-1 text-sm max-w-prose">
+              <p class="text-sm text-neutral-500 mt-1 font-light leading-snug">
                 {post.data.description}
               </p>
             )}
-            <time
-              datetime={new Date(post.data.pubDate).toISOString()}
-              class="text-xs text-neutral-400 mt-1 block"
-            >
-              {new Date(post.data.pubDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              })}
-            </time>
-          </a>
-        </article>
-      ))}
-    </div>
 
-    {sortedPosts.length === 0 && (
-      <p class="text-neutral-500 mt-8">No posts yet. Start writing.</p>
-    )}
-  </section>
+            <div class="flex items-center justify-between mt-2 text-xs text-neutral-400">
+              <time datetime={new Date(post.data.pubDate).toISOString()}>
+                {new Date(post.data.pubDate).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric"
+                })}
+              </time>
+              {post.data.tags && (
+                <div class="flex gap-2">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag-pill text-xs">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      ) : (
+        <p class="text-neutral-500 mt-8">No posts yet. Start writing.</p>
+      )}
+    </section>
+  </main>
 </Layout>

@@ -7,7 +7,7 @@ import Link from "../components/icons/Link.astro";
 <Layout>
   <main class="w-[90vw] xs:w-[500px] max-w-4xl mx-auto">
     <h1 class="text-2xl font-medium mb-2">Papershelf</h1>
-    <p class="text-neutral-500 font-light text-sm mb-8">
+    <p class="text-neutral-500 font-light mb-8">
       Dissections, insights, and ideas from research papers and engineering blogs.
     </p>
 
@@ -17,13 +17,28 @@ import Link from "../components/icons/Link.astro";
           href={paper.link}
           target="_blank"
           rel="noopener noreferrer"
-          class="group block rounded-2xl border border-neutral-200 bg-white p-5 transition-all hover:shadow-md hover:-translate-y-1"
+          class="group block rounded-2xl border border-neutral-200 bg-white p-5 transition-all hover:shadow-md hover:-translate-y-[3px] hover:border-purple-200 hover:bg-gradient-to-br hover:from-white hover:to-purple-50/40"
         >
           <div class="flex justify-between items-start mb-2">
-            <h2 class="font-medium text-lg leading-snug text-neutral-800 group-hover:text-neutral-900">
+            <h2 class="font-medium text-lg leading-snug text-neutral-800 group-hover:text-purple-700 transition-colors">
               {paper.title}
             </h2>
-            <span class="tag-pill text-xs">{paper.year}</span>
+
+            <!-- Colored year pill -->
+            <span
+              class:list={[
+                'tag-pill text-xs',
+                paper.type === 'Research'
+                  ? 'tag-research'
+                  : paper.type === 'Engineering'
+                  ? 'tag-engineering'
+                  : paper.type === 'Notes'
+                  ? 'tag-notes'
+                  : 'tag-default'
+              ]}
+            >
+              {paper.year}
+            </span>
           </div>
 
           <p class="text-sm font-light text-neutral-500 mb-2">
@@ -32,7 +47,7 @@ import Link from "../components/icons/Link.astro";
 
           <div class="flex items-center justify-between text-xs text-neutral-500">
             <span>{paper.source}</span>
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 group-hover:text-purple-700 transition-colors">
               <span class="capitalize">{paper.type}</span>
               <Link />
             </div>
@@ -42,3 +57,63 @@ import Link from "../components/icons/Link.astro";
     </div>
   </main>
 </Layout>
+
+<style is:global>
+  /* Core tag pill style */
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+  }
+
+  /* Tag colors */
+  .tag-research {
+    background: rgba(147, 51, 234, 0.1);
+    color: #6d28d9;
+    border-color: rgba(147, 51, 234, 0.15);
+  }
+
+  .tag-engineering {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.15);
+  }
+
+  .tag-notes {
+    background: rgba(234, 179, 8, 0.1);
+    color: #ca8a04;
+    border-color: rgba(234, 179, 8, 0.15);
+  }
+
+  .tag-default {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    border-color: rgba(107, 114, 128, 0.15);
+  }
+
+  /* Hover pulse for tag pills */
+  .group:hover .tag-research {
+    background: rgba(147, 51, 234, 0.15);
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.15);
+  }
+
+  .group:hover .tag-engineering {
+    background: rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
+  }
+
+  .group:hover .tag-notes {
+    background: rgba(234, 179, 8, 0.15);
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.15);
+  }
+
+  .group:hover .tag-default {
+    background: rgba(107, 114, 128, 0.15);
+  }
+</style>

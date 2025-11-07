@@ -38,39 +38,36 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="article" />
   </head>
 
-  <body class="bg-neutral-50 antialiased text-neutral-900 mb-6">
+  <body class="bg-neutral-50 antialiased text-neutral-900 flex flex-col min-h-screen">
     <!-- ✅ Same header as all pages -->
-    <div class="flex justify-center">
-      <div class="flex min-h-screen w-[90vw] flex-col xs:w-[500px] max-w-4xl">
-        <Header />
+    <Header />
 
-        <!-- Article content -->
-        <main class="flex-grow mt-6">
-          <article class="max-w-prose">
-            <header class="mb-8">
-              <h1 class="text-2xl font-medium mb-2 leading-tight">
-                {title}
-              </h1>
-              {formattedDate && (
-                <div class="text-sm text-neutral-500 font-light">
-                  <time datetime={new Date(pubDate!).toISOString()}>
-                    {formattedDate}
-                  </time>
-                </div>
-              )}
-            </header>
-
-            <div class="prose prose-neutral max-w-none">
-              <slot />
+    <!-- ✅ Blog Post Body -->
+    <main class="flex-grow w-[90vw] xs:w-[500px] max-w-4xl mx-auto mt-10 mb-16">
+      <article class="animate-intro">
+        <header class="mb-8">
+          <h1 class="text-2xl font-medium mb-2 leading-tight">{title}</h1>
+          {formattedDate && (
+            <div class="text-sm text-neutral-500 font-light">
+              <time datetime={new Date(pubDate!).toISOString()}>
+                {formattedDate}
+              </time>
             </div>
-          </article>
-        </main>
+          )}
+        </header>
 
-        <Footer />
-      </div>
+        <div class="prose prose-neutral max-w-none">
+          <slot />
+        </div>
+      </article>
+    </main>
+
+    <!-- ✅ Unified Footer (Centered + Correct Spacing) -->
+    <div class="w-[90vw] xs:w-[500px] max-w-4xl mx-auto mt-auto pb-10">
+      <Footer />
     </div>
 
-    <!-- Subtle top/bottom blurs -->
+    <!-- ✅ Subtle top/bottom blur -->
     <div class="fixed top-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur" aria-hidden="true"></div>
     <div class="fixed bottom-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur" aria-hidden="true"></div>
   </body>

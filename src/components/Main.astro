@@ -1,12 +1,14 @@
 ---
-import Link from './icons/Link.astro'
+import Link from './icons/Link.astro';
+import { getCollection } from 'astro:content';
+import books from '../data/books.json';
+import papers from '../data/papers.json';
 
 const projects = [
   {
     label: 'Project One',
     href: 'example.com',
-    description:
-      'Coming Soon',
+    description: 'Coming Soon',
   },
   {
     label: 'Project Two',
@@ -18,146 +20,133 @@ const projects = [
     href: 'example.com',
     description: 'Coming Soon.',
   },
-]
+];
 
 const socials = [
-  {
-    label: 'hari.nallaparaju@gmail.com',
-    href: 'mailto:hari.nallaparaju@gmail.com',
-  },
-  // {
-  //   label: 'X',
-  //   href: 'https://x.com/harinallaparaju',
-  // },
-  {
-    label: 'GitHub',
-    href: 'https://github.com/harinallaparaju',
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/surya-narayana-raju-nallaparaju-99b4b2217/',
-  },
-]
+  { label: 'hari.nallaparaju@gmail.com', href: 'mailto:hari.nallaparaju@gmail.com' },
+  { label: 'GitHub', href: 'https://github.com/harinallaparaju' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/surya-narayana-raju-nallaparaju-99b4b2217/' },
+];
+
+const posts = await getCollection('blog');
+const sortedPosts = posts
+  .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate))
+  .slice(0, 2);
 ---
 
 <main>
-  <section class='mt-2'>
-        <h1 class="mb-6 font-semibold text-lg text-neutral-900">
-          <a href="/" class="hover:text-neutral-700 transition-colors">
-            Surya Nallaparaju
-          </a>
-        </h1>
+  <!-- 👤 Intro -->
+  <section class="mt-2">
+    <h1 class="mb-6 font-semibold text-lg text-neutral-900">
+      <a href="/" class="hover:text-neutral-700 transition-colors">Surya Nallaparaju</a>
+    </h1>
 
-        <p class="font-light leading-snug mb-3 text-neutral-800">
-          I'm an MTech Computer Science student (currently) at NIT Warangal. This is my lil
-          corner of the web where I share my work with y'all.
-        </p>
+    <p class="font-light leading-snug mb-3 text-neutral-800">
+      I'm an MTech Computer Science student (currently) at NIT Warangal. This is my lil
+      corner of the web where I share my work with y'all.
+    </p>
 
-        <p class="font-light leading-snug text-neutral-800 mb-4">
-          In my free time, I spend time outdoors, listen to podcasts and music, eat (a lot),
-          and tinker around with all sorts of random computer stuff.
-        </p>
+    <p class="font-light leading-snug text-neutral-800 mb-4">
+      In my free time, I spend time outdoors, listen to podcasts and music, eat (a lot),
+      and tinker around with all sorts of random computer stuff.
+    </p>
 
-    <h2
-      class='mb-3 animate-intro font-medium opacity-0 [animation-delay:0.35s]'
-    >
-      Where
-    </h2>
-    <div
-      class='relative h-fit w-fit animate-intro overflow-hidden opacity-0 [animation-delay:0.4s]'
-    >
-      <img
-        src='/cloud.webp'
-        width='390'
-        height='347'
-        alt=''
-        draggable='false'
-        class='absolute animate-cloud blur-sm'
-      />
-      <img
-        src='/plane.webp'
-        width='24'
-        height='56'
-        alt=''
-        draggable='false'
-        class='absolute -translate-x-96 animate-plane [animation-delay:5s]'
-      />
-      <img
-        src='/plane-shadow.webp'
-        width='24'
-        height='24'
-        alt=''
-        draggable='false'
-        class='absolute -translate-x-96 animate-plane-shadow [animation-delay:5s]'
-      />
-      <img
-        width='500'
-        height='250'
-        src='/warangal.jpeg'
-        alt='Map with marker in Warangal, Telangana'
-        loading='eager'
-        draggable='false'
-        class='rounded-3xl'
-      />
+    <!-- 🌍 Map -->
+    <h2 class="mb-3 animate-intro font-medium opacity-0 [animation-delay:0.35s]">Where</h2>
+    <div class="relative h-fit w-fit animate-intro overflow-hidden opacity-0 [animation-delay:0.4s]">
+      <img src="/cloud.webp" width="390" height="347" alt="" draggable="false" class="absolute animate-cloud blur-sm" />
+      <img src="/plane.webp" width="24" height="56" alt="" draggable="false" class="absolute -translate-x-96 animate-plane [animation-delay:5s]" />
+      <img src="/plane-shadow.webp" width="24" height="24" alt="" draggable="false" class="absolute -translate-x-96 animate-plane-shadow [animation-delay:5s]" />
+      <img width="500" height="250" src="/warangal.jpeg" alt="Map with marker in Warangal, Telangana" loading="eager" draggable="false" class="rounded-3xl" />
       <a
-        href='https://en.wikipedia.org/wiki/Warangal'
-        target='_blank'
-        rel='noreferrer'
-        class='exclude absolute bottom-0 right-0 mb-3 mr-3 select-none rounded-md border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-xs text-neutral-600'
-      >Warangal, Telangana</a
-      >
+        href="https://en.wikipedia.org/wiki/Warangal"
+        target="_blank"
+        rel="noreferrer"
+        class="exclude absolute bottom-0 right-0 mb-3 mr-3 select-none rounded-md border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-xs text-neutral-600"
+      >Warangal, Telangana</a>
       <div aria-hidden>
-        <div
-          class='absolute left-[8%] top-[47%] z-10 h-4 w-4 -translate-x-1/2 -translate-y-1/2 animate-marker rounded-full bg-blue-500'
-        >
-        </div>
+        <div class="absolute left-[8%] top-[47%] z-10 h-4 w-4 -translate-x-1/2 -translate-y-1/2 animate-marker rounded-full bg-blue-500"></div>
       </div>
-    </div>
     </div>
   </section>
-  <section class='mt-12'>
-    <h2 class='mb-3 animate-intro font-medium opacity-0 [animation-delay:0.4s]'>
-      Projects
-    </h2>
-    <ul
-      class='relative flex animate-intro flex-col gap-y-4 opacity-0 [animation-delay:0.45s]'
-    >
-      {
-        projects.map((project) => (
-          <li>
-            <a
-              href={`https://${project.href}`}
-              rel='noreferrer'
-              target='_blank'
-              class='flex w-fit items-center'
-            >
-              {project.label}
-              <Link />
-            </a>
-            <p class='mt-1 font-light leading-snug text-neutral-500'>
-              {project.description}
-            </p>
-          </li>
-        ))
-      }
-    </ul>
-    <section class='mt-12 animate-intro opacity-0 [animation-delay:0.5s]'>
-      <h2 class='mb-3 font-medium'>Connect</h2>
-      <div class='flex flex-row flex-wrap items-center gap-x-1 gap-y-2'>
-        {
-          socials.map((social) => (
-            <a
-              href={social.href}
-              target='_blank'
-              rel='noreferrer'
-              class='exclude flex select-none items-center rounded-full bg-neutral-200 px-3 py-1 text-sm transition-colors hover:bg-neutral-300'
-            >
-              {social.label}
-              <Link />
-            </a>
-          ))
-        }
-      </div>
-    </section>
+  
+  {/* 💡 Projects
+<section class="mt-12 animate-intro opacity-0 [animation-delay:0.45s]">
+  <h2 class="mb-3 font-medium">Projects</h2>
+  <ul class="flex flex-col gap-y-4">
+    {projects.map((p) => (
+      <li>
+        <a href={`https://${p.href}`} target="_blank" class="flex items-center font-medium text-neutral-800 hover:text-blue-600 transition-colors">
+          {p.label}
+          <Link />
+        </a>
+        <p class="text-sm text-neutral-500">{p.description}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+*/}
+
+
+
+  <!-- ✍️ Latest Writing -->
+  <section class="mt-12 animate-intro opacity-0 [animation-delay:0.5s]">
+    <h2 class="mb-3 font-medium">Latest Writing</h2>
+    <div class="space-y-4">
+      {sortedPosts.map((post) => (
+        <a href={`/blog/${post.slug}/`} class="group block">
+          <h3 class="text-lg font-medium text-neutral-800 group-hover:text-yellow-600 transition-colors">
+            {post.data.title}
+          </h3>
+          <p class="text-sm text-neutral-500">{post.data.description}</p>
+        </a>
+      ))}
+    </div>
+    <a href="/blog/" class="inline-block mt-3 text-sm text-yellow-600 hover:underline">→ View all writing</a>
+  </section>
+
+  <!-- 📚 Bookshelf Preview -->
+  <section class="mt-12 animate-intro opacity-0 [animation-delay:0.55s]">
+    <h2 class="mb-3 font-medium">Bookshelf</h2>
+    <div class="grid grid-cols-4 gap-4">
+      {books.slice(0, 4).map((book) => (
+        <img src={book.cover} alt={book.title} class="rounded-lg shadow-sm hover:-translate-y-1 transition-transform" />
+      ))}
+    </div>
+    <a href="/bookshelf/" class="inline-block mt-3 text-sm text-orange-600 hover:underline">→ See all books</a>
+  </section>
+
+  <!-- 🔬 Papershelf Preview -->
+  <section class="mt-12 animate-intro opacity-0 [animation-delay:0.6s]">
+    <h2 class="mb-3 font-medium">Papershelf</h2>
+    <div class="space-y-3">
+      {papers.slice(0, 2).map((paper) => (
+        <a href={paper.link} target="_blank" class="group block">
+          <h3 class="text-base font-medium text-neutral-800 group-hover:text-purple-600 transition-colors">
+            {paper.title}
+          </h3>
+          <p class="text-sm text-neutral-500">{paper.source}</p>
+        </a>
+      ))}
+    </div>
+    <a href="/papershelf/" class="inline-block mt-3 text-sm text-purple-600 hover:underline">→ See all papers</a>
+  </section>
+
+  <!-- 💌 Connect -->
+  <section class="mt-12 animate-intro opacity-0 [animation-delay:0.65s]">
+    <h2 class="mb-3 font-medium">Connect</h2>
+    <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
+      {socials.map((social) => (
+        <a
+          href={social.href}
+          target="_blank"
+          rel="noreferrer"
+          class="exclude flex select-none items-center rounded-full bg-neutral-200 px-3 py-1 text-sm transition-colors hover:bg-neutral-300"
+        >
+          {social.label}
+          <Link />
+        </a>
+      ))}
+    </div>
   </section>
 </main>
