@@ -26,22 +26,6 @@ const path = Astro.url.pathname;
           </div>
         </a>
 
-        <!-- Blog -->
-        <a
-          href="/blog/"
-          class:list={[
-            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
-            path.startsWith('/blog')
-              ? 'text-yellow-600 active-link'
-              : 'text-neutral-700 hover:text-yellow-600'
-          ]}
-        >
-          <span>Blog</span>
-          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Link />
-          </div>
-        </a>
-
         <!-- Gallery -->
         <a
           href="/gallery/"
@@ -85,6 +69,22 @@ const path = Astro.url.pathname;
           ]}
         >
           <span>Papershelf</span>
+          <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Link />
+          </div>
+        </a>
+
+        <!-- Blog -->
+        <a
+          href="/blog/"
+          class:list={[
+            'group flex items-center gap-1 font-medium transition-all hover:translate-x-1',
+            path.startsWith('/blog')
+              ? 'text-yellow-600 active-link'
+              : 'text-neutral-700 hover:text-yellow-600'
+          ]}
+        >
+          <span>Blog</span>
           <div class="opacity-0 group-hover:opacity-100 transition-opacity">
             <Link />
           </div>
