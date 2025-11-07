@@ -194,3 +194,9 @@ a:hover {
 .animate-intro, .reveal {
   will-change: opacity, transform;
 }
+
+::-webkit-search-cancel-button { display: none; }
+
+input::placeholder {
+  color: #a3a3a3;
+}
