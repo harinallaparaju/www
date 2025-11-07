@@ -2,7 +2,7 @@
 title: Welcome to my corner of the internet
 description: "This is my first post."
 pubDate: 2025-08-10
-tags: ["project"]
+tags: ["Note"]
 ---
 Surya Nallaparaju, here. And this is my space on the internet.
 
