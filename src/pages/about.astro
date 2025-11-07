@@ -1,5 +1,6 @@
 ---
 import Layout from "../components/Layout.astro";
+import now from "../data/now.json";
 import Link from "../components/icons/Link.astro";
 ---
 
@@ -50,6 +51,16 @@ import Link from "../components/icons/Link.astro";
           elegant and efficient.
         </p>
       </div>
+
+    <section class="mt-12">
+      <h2 class="text-lg mb-3 font-medium">Now</h2>
+      <ul class="font-light text-neutral-700 space-y-1">
+        <li><strong>Reading:</strong> {now.reading}</li>
+        <li><strong>Building:</strong> {now.building}</li>
+        <li><strong>Exploring:</strong> {now.exploring}</li>
+      </ul>
+    </section>
+
 
       <!-- Links -->
       <div class="animate-intro">

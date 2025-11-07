@@ -7,13 +7,49 @@ import CommandPalette from "./CommandPalette.astro";
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-      {Astro.props.title ? `${Astro.props.title} | Surya Nallaparaju` : 'Surya Nallaparaju'}
-    </title>
-    <meta name="description" content="The website and design portfolio of Surya Nallaparaju." />
-  </head>
+  <meta charset="utf-8" />
+  <title>Surya Nallaparaju</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+  <meta name="description" content="The personal website and portfolio of Surya Nallaparaju — writing, research dissections, and projects in computer science." />
+  <meta name="author" content="Surya Nallaparaju" />
+  <meta name="theme-color" content="#fafafa" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Canonical -->
+  <link rel="canonical" href="https://suryanallaparaju.com" />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Surya Nallaparaju" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://suryanallaparaju.com" />
+  <meta property="og:title" content="Surya Nallaparaju" />
+  <meta property="og:description" content="The website and design portfolio of Surya Nallaparaju." />
+  <meta property="og:image" content="https://suryanallaparaju.com/og/default.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Surya Nallaparaju" />
+  <meta name="twitter:description" content="Research dissections, writing, and work by Surya Nallaparaju." />
+  <meta name="twitter:image" content="https://suryanallaparaju.com/og/default.jpg" />
+  <meta name="twitter:creator" content="@harinallaparaju" />
+
+  <!-- JSON-LD for Google -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Surya Nallaparaju",
+      "url": "https://suryanallaparaju.com",
+      "sameAs": [
+        "https://github.com/harinallaparaju",
+        "https://www.linkedin.com/in/surya-narayana-raju-nallaparaju-99b4b2217/"
+      ],
+      "jobTitle": "MTech Computer Science Student, NIT Warangal"
+    }
+  </script>
+
+  <link rel="icon" href="/favicon.ico" />
+</head>
 
   <body class="bg-neutral-50 text-neutral-900 antialiased">
     <!-- ✅ Shared centered header for all pages -->
@@ -45,5 +81,25 @@ import CommandPalette from "./CommandPalette.astro";
     ></div>
 
     <CommandPalette />
+
+    <script is:inline>
+  if (document.startViewTransition) {
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a');
+      if (
+        anchor &&
+        anchor.href &&
+        anchor.origin === window.location.origin &&
+        !anchor.hasAttribute('data-no-transition')
+      ) {
+        e.preventDefault();
+        document.startViewTransition(() => {
+          window.location.href = anchor.href;
+        });
+      }
+    });
+  }
+</script>
+
   </body>
 </html>
