@@ -3,7 +3,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
-import { rss } from '@astrojs/rss';
+import rss from '@astrojs/rss';
 
 export default defineConfig({
   site: "https://suryanallaparaju.com",
