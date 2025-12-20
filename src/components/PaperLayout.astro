@@ -1,0 +1,302 @@
+---
+import '../global.css';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  title: string;
+  type?: 'Paper Dissection' | 'Engineering' | 'Notes';
+  source?: string;
+  year?: string;
+  tags?: string[];
+  pubDate?: string;
+}
+
+const {
+  title,
+  type = 'Paper Dissection',
+  source,
+  year,
+  tags = [],
+  pubDate
+} = Astro.props;
+
+// Auto-calculate reading time
+const content = await Astro.slots.render('default');
+const words = content.split(/\s+/).length;
+const readingTime = Math.ceil(words / 200);
+
+const formattedDate = pubDate
+  ? new Date(pubDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+
+const typeColors = {
+  'Paper Dissection': 'purple',
+  'Engineering': 'blue',
+  'Notes': 'yellow'
+};
+
+const currentColor = typeColors[type] || 'purple';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title} | Surya Nallaparaju</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`${type}: ${title}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="article" />
+  </head>
+
+  <body class="bg-neutral-50 antialiased text-neutral-900">
+    <Header />
+
+    <main class="flex justify-center px-6 mt-16 sm:mt-20">
+      <article class="w-full max-w-[600px] animate-intro">
+        
+        <header class="mb-10">
+          <div class="flex items-center gap-2 mb-5">
+            <span class={`paper-badge paper-badge-${currentColor}`}>
+              {type}
+            </span>
+            {year && (
+              <span class="text-[15px] text-neutral-400">
+                {year}
+              </span>
+            )}
+          </div>
+
+          <h1 class="text-3xl sm:text-[2.5rem] font-semibold leading-[1.15] tracking-[-0.02em] mb-6 text-neutral-900">
+            {title}
+          </h1>
+
+          <div class="flex flex-wrap items-center gap-2 text-[15px] text-neutral-500">
+            {formattedDate && (
+              <time datetime={new Date(pubDate!).toISOString()}>
+                {formattedDate}
+              </time>
+            )}
+            <span class="text-neutral-300">·</span>
+            <span>{readingTime} min read</span>
+            {source && (
+              <>
+                <span class="text-neutral-300">·</span>
+                <span class="italic">{source}</span>
+              </>
+            )}
+          </div>
+
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mt-5">
+              {tags.map((tag) => (
+                <span class="tag-badge">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <div class="paper-content">
+          <slot />
+        </div>
+
+        <div class="mt-20 pt-8 border-t border-neutral-200">
+          <a 
+            href="/papershelf/" 
+            class="inline-flex items-center gap-2 text-[15px] text-neutral-500 hover:text-neutral-900 transition-colors group"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:-translate-x-1">
+              <path d="M10 14L4 8l6-6"/>
+            </svg>
+            All papers
+          </a>
+        </div>
+      </article>
+    </main>
+
+    <div class="w-full max-w-[600px] mx-auto px-6 mt-20 pb-12">
+      <Footer />
+    </div>
+
+    <div class="fixed top-0 z-40 h-12 w-screen bg-neutral-50/80 blur pointer-events-none" aria-hidden="true"></div>
+    <div class="fixed bottom-0 z-40 h-12 w-screen bg-neutral-50/80 blur pointer-events-none" aria-hidden="true"></div>
+  </body>
+</html>
+
+<style is:global>
+  .paper-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .paper-badge-purple {
+    background: rgba(147, 51, 234, 0.1);
+    color: #7c3aed;
+  }
+
+  .paper-badge-blue {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+  }
+
+  .paper-badge-yellow {
+    background: rgba(234, 179, 8, 0.1);
+    color: #ca8a04;
+  }
+
+  .tag-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    background: rgba(0, 0, 0, 0.04);
+    color: #737373;
+  }
+
+  /* Perfect reading typography */
+  .paper-content {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: #262626;
+    font-weight: 400;
+    letter-spacing: -0.011em;
+  }
+
+  .paper-content h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: #171717;
+    letter-spacing: -0.02em;
+  }
+
+  .paper-content h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 2rem;
+    margin-bottom: 0.875rem;
+    color: #171717;
+    letter-spacing: -0.015em;
+  }
+
+  .paper-content h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.45;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: #262626;
+  }
+
+  .paper-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .paper-content a {
+    color: #7c3aed;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+    transition: border-color 0.2s;
+  }
+
+  .paper-content a:hover {
+    border-bottom-color: #7c3aed;
+  }
+
+  .paper-content strong {
+    font-weight: 600;
+    color: #171717;
+  }
+
+  .paper-content em {
+    font-style: italic;
+  }
+
+  .paper-content code {
+    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    color: #dc2626;
+  }
+
+  .paper-content pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .paper-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    border-radius: 0;
+  }
+
+  .paper-content ul,
+  .paper-content ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .paper-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .paper-content ul li {
+    list-style-type: disc;
+  }
+
+  .paper-content ol li {
+    list-style-type: decimal;
+  }
+
+  .paper-content blockquote {
+    border-left: 2px solid #a78bfa;
+    padding-left: 1.25rem;
+    margin: 2rem 0;
+    color: #525252;
+    font-style: italic;
+  }
+
+  .paper-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 2.5rem 0;
+  }
+
+  .paper-content hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 3rem 0;
+  }
+
+  @media (max-width: 640px) {
+    .paper-content {
+      font-size: 1rem;
+    }
+  }
+</style>

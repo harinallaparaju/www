@@ -7,12 +7,14 @@ interface Props {
   title?: string;
   description?: string;
   pubDate?: string;
+  tags?: string[];
 }
 
 const {
   title = "",
   description = "Blog post description",
-  pubDate
+  pubDate,
+  tags = []
 } = Astro.props;
 
 const formattedDate = pubDate
@@ -24,6 +26,11 @@ const formattedDate = pubDate
   : null;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Calculate reading time (rough estimate)
+const content = await Astro.slots.render('default');
+const words = content.split(/\s+/).length;
+const readingTime = Math.ceil(words / 200);
 ---
 
 <html lang="en">
@@ -38,37 +45,208 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="article" />
   </head>
 
-  <body class="bg-neutral-50 antialiased text-neutral-900 flex flex-col min-h-screen">
-    <!-- ✅ Same header as all pages -->
+  <body class="bg-neutral-50 antialiased text-neutral-900">
     <Header />
 
-    <!-- ✅ Blog Post Body -->
-    <main class="flex-grow w-[90vw] xs:w-[500px] max-w-4xl mx-auto mt-10 mb-16">
-      <article class="animate-intro">
-        <header class="mb-8">
-          <h1 class="text-2xl font-medium mb-2 leading-tight">{title}</h1>
-          {formattedDate && (
-            <div class="text-sm text-neutral-500 font-light">
+    <main class="flex justify-center px-6 mt-16 sm:mt-20">
+      <article class="w-full max-w-[600px] animate-intro">
+        
+        <header class="mb-10">
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-5">
+              {tags.map((tag) => (
+                <span class="tag-badge">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <h1 class="text-3xl sm:text-[2.5rem] font-semibold leading-[1.15] tracking-[-0.02em] mb-6 text-neutral-900">
+            {title}
+          </h1>
+
+          <div class="flex items-center gap-2 text-[15px] text-neutral-500">
+            {formattedDate && (
               <time datetime={new Date(pubDate!).toISOString()}>
                 {formattedDate}
               </time>
-            </div>
-          )}
+            )}
+            <span class="text-neutral-300">·</span>
+            <span>{readingTime} min read</span>
+          </div>
         </header>
 
-        <div class="prose prose-neutral max-w-none">
+        <div class="blog-content">
           <slot />
+        </div>
+
+        <div class="mt-20 pt-8 border-t border-neutral-200">
+          <a 
+            href="/blog/" 
+            class="inline-flex items-center gap-2 text-[15px] text-neutral-500 hover:text-neutral-900 transition-colors group"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:-translate-x-1">
+              <path d="M10 14L4 8l6-6"/>
+            </svg>
+            All writing
+          </a>
         </div>
       </article>
     </main>
 
-    <!-- ✅ Unified Footer (Centered + Correct Spacing) -->
-    <div class="w-[90vw] xs:w-[500px] max-w-4xl mx-auto mt-auto pb-10">
+    <div class="w-full max-w-[600px] mx-auto px-6 mt-20 pb-12">
       <Footer />
     </div>
 
-    <!-- ✅ Subtle top/bottom blur -->
-    <div class="fixed top-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur" aria-hidden="true"></div>
-    <div class="fixed bottom-[-10px] z-40 h-12 w-screen bg-neutral-100 opacity-90 blur" aria-hidden="true"></div>
+    <div class="fixed top-0 z-40 h-12 w-screen bg-neutral-50/80 blur pointer-events-none" aria-hidden="true"></div>
+    <div class="fixed bottom-0 z-40 h-12 w-screen bg-neutral-50/80 blur pointer-events-none" aria-hidden="true"></div>
   </body>
 </html>
+
+<style is:global>
+  .tag-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    letter-spacing: -0.01em;
+  }
+
+  /* Perfect reading typography */
+  .blog-content {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: #262626;
+    font-weight: 400;
+    letter-spacing: -0.011em;
+  }
+
+  .blog-content h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: #171717;
+    letter-spacing: -0.02em;
+  }
+
+  .blog-content h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 2rem;
+    margin-bottom: 0.875rem;
+    color: #171717;
+    letter-spacing: -0.015em;
+  }
+
+  .blog-content h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.45;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: #262626;
+  }
+
+  .blog-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-content a {
+    color: #f59e0b;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+    transition: border-color 0.2s;
+  }
+
+  .blog-content a:hover {
+    border-bottom-color: #f59e0b;
+  }
+
+  .blog-content strong {
+    font-weight: 600;
+    color: #171717;
+  }
+
+  .blog-content em {
+    font-style: italic;
+  }
+
+  .blog-content code {
+    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    color: #dc2626;
+  }
+
+  .blog-content pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .blog-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    border-radius: 0;
+  }
+
+  .blog-content ul,
+  .blog-content ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .blog-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-content ul li {
+    list-style-type: disc;
+  }
+
+  .blog-content ol li {
+    list-style-type: decimal;
+  }
+
+  .blog-content blockquote {
+    border-left: 2px solid #fbbf24;
+    padding-left: 1.25rem;
+    margin: 2rem 0;
+    color: #525252;
+    font-style: italic;
+  }
+
+  .blog-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 2.5rem 0;
+  }
+
+  .blog-content hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 3rem 0;
+  }
+
+  @media (max-width: 640px) {
+    .blog-content {
+      font-size: 1rem;
+    }
+  }
+</style>

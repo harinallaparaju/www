@@ -1,12 +1,15 @@
 ---
 import Layout from '../components/Layout.astro';
 
-const images = import.meta.glob('../../public/gallery/*.{jpg,jpeg,png,webp,JPG,PNG}', { eager: true, as: 'url' });
-const items = Object.values(images);
+const images = import.meta.glob('../../public/gallery/*.{jpg,jpeg,png,webp,JPG,PNG}', { 
+  eager: true, 
+  as: 'url' 
+});
 
-// small helper for captions (you can supply filename-based captions)
+const items = Object.values(images);
 const captionFrom = (src: string) => src.split('/').pop();
 ---
+
 <Layout title="Gallery">
   <header class="mb-6">
     <h1 class="text-2xl font-semibold">Gallery</h1>
@@ -16,11 +19,18 @@ const captionFrom = (src: string) => src.split('/').pop();
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
     {items.map((src, idx) => (
       <button 
-  class="rounded-lg overflow-hidden border border-neutral-200 bg-white p-0" 
-  onclick={() => openLightbox(idx)} 
-  aria-label={`Open image ${idx + 1}`}
->
-        <img src={src} alt={captionFrom(src)} class="w-full h-56 object-cover transition-transform hover:scale-105" loading="lazy" />
+        class="gallery-item rounded-lg overflow-hidden border border-neutral-200 bg-white p-0" 
+        data-index={idx}
+        aria-label={`Open image ${idx + 1}`}
+      >
+        <img 
+          src={src} 
+          alt={captionFrom(src)} 
+          class="w-full h-56 object-cover transition-transform hover:scale-105" 
+          loading="lazy"
+          decoding="async"
+          fetchpriority={idx < 3 ? "high" : "low"}
+        />
       </button>
     ))}
   </div>
@@ -35,45 +45,128 @@ const captionFrom = (src: string) => src.split('/').pop();
     <img id="lightbox-img" class="lightbox-img" alt="Lightbox image" />
   </div>
 
-  <script is:inline>
-    (function () {
-      const items = JSON.parse(decodeURIComponent("{{ encodeURIComponent(JSON.stringify(items)) }}"));
-      const lightbox = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      const prev = document.getElementById('prev-btn');
-      const next = document.getElementById('next-btn');
-      const close = document.getElementById('lightbox-close');
-      let idx = 0;
-
-      const show = (i) => {
-        idx = (i + items.length) % items.length;
-        img.src = items[idx];
-        lightbox.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        img.style.transform = 'scale(1.06)';
-        requestAnimationFrame(() => img.style.transform = 'scale(1)'); // zoom-in
-      };
-      const hide = () => {
-        lightbox.classList.remove('show');
-        document.body.style.overflow = '';
-      };
-
-      window.openLightbox = (i) => show(i);
-
-      prev.addEventListener('click', () => show(idx - 1));
-      next.addEventListener('click', () => show(idx + 1));
-      close.addEventListener('click', hide);
-
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) hide();
+  <script define:vars={{ items }}>
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const prev = document.getElementById('prev-btn');
+    const next = document.getElementById('next-btn');
+    const close = document.getElementById('lightbox-close');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    let idx = 0;
+    
+    const show = (i) => {
+      idx = (i + items.length) % items.length;
+      img.src = items[idx];
+      lightbox.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      
+      // Preload adjacent images
+      const prevIdx = (idx - 1 + items.length) % items.length;
+      const nextIdx = (idx + 1) % items.length;
+      [prevIdx, nextIdx].forEach(i => {
+        const preload = new Image();
+        preload.src = items[i];
       });
-
-      document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('show')) return;
-        if (e.key === 'Escape') hide();
-        if (e.key === 'ArrowLeft') show(idx - 1);
-        if (e.key === 'ArrowRight') show(idx + 1);
-      });
-    })();
+    };
+    
+    const hide = () => {
+      lightbox.classList.remove('show');
+      document.body.style.overflow = '';
+    };
+    
+    galleryItems.forEach((item, i) => {
+      item.addEventListener('click', () => show(i));
+    });
+    
+    prev.addEventListener('click', () => show(idx - 1));
+    next.addEventListener('click', () => show(idx + 1));
+    close.addEventListener('click', hide);
+    
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) hide();
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('show')) return;
+      if (e.key === 'Escape') hide();
+      if (e.key === 'ArrowLeft') show(idx - 1);
+      if (e.key === 'ArrowRight') show(idx + 1);
+    });
   </script>
+
+  <style>
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-backdrop.show {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 101;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      pointer-events: none;
+      z-index: 101;
+    }
+
+    .lightbox-arrow {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      pointer-events: all;
+      transition: background 0.2s;
+    }
+
+    .lightbox-arrow:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 640px) {
+      .lightbox-nav { padding: 0 1rem; }
+    }
+  </style>
 </Layout>
