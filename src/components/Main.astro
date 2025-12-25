@@ -3,6 +3,7 @@ import Link from './icons/Link.astro';
 import { getCollection } from 'astro:content';
 import books from '../data/books.json';
 import papers from '../data/papers.json';
+import music from '../data/music.json'; 
 
 const projects = [
   {
@@ -131,6 +132,169 @@ const sortedPosts = posts
     </div>
     <a href="/papershelf/" class="inline-block mt-3 text-sm text-purple-600 hover:underline">→ See all papers</a>
   </section>
+
+<!-- 🎵 Music I Like -->
+<section class="mt-12 animate-intro opacity-0" style="animation-delay: 0.65s">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="font-medium">Music I Like</h2>
+    <button 
+      id="refresh-music" 
+      class="text-sm text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1.5"
+      aria-label="Refresh music selection"
+    >
+      <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+  
+  <!-- Scrollable horizontal carousel -->
+  <div class="relative -mx-4 px-4">
+    <div class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory" id="music-carousel">
+      {music.map((album, idx) => (
+        <a 
+          href={album.spotify}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="music-album group flex-shrink-0 snap-start"
+          data-index={idx}
+        >
+          <div class="relative w-32 h-32 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1">
+            <img 
+              src={album.cover} 
+              alt={`${album.title} by ${album.artist}`}
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+            
+            <!-- Play button on hover -->
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Album info below -->
+          <div class="mt-2 w-32">
+            <div class="text-xs font-medium text-neutral-900 line-clamp-1 leading-tight">
+              {album.title}
+            </div>
+            <div class="text-[11px] text-neutral-500 line-clamp-1 mt-0.5">
+              {album.artist}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .music-album {
+    cursor: pointer;
+  }
+
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .spinning {
+    animation: spin 0.6s ease-in-out;
+  }
+
+  /* Smooth scroll behavior */
+  #music-carousel {
+    scroll-behavior: smooth;
+  }
+</style>
+
+<script>
+  const refreshBtn = document.getElementById('refresh-music');
+  const refreshIcon = document.getElementById('refresh-icon');
+  const carousel = document.getElementById('music-carousel');
+  
+  if (refreshBtn && carousel) {
+    refreshBtn.addEventListener('click', () => {
+      // Spin the icon
+      refreshIcon?.classList.add('spinning');
+      
+      setTimeout(() => {
+        refreshIcon?.classList.remove('spinning');
+      }, 600);
+
+      // Shuffle animation - scroll to start first
+      carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      
+      // Animate the albums
+      const albums = carousel.querySelectorAll('.music-album');
+      albums.forEach((album, idx) => {
+        setTimeout(() => {
+          album.style.opacity = '0';
+          album.style.transform = 'scale(0.9)';
+          
+          setTimeout(() => {
+            album.style.opacity = '1';
+            album.style.transform = 'scale(1)';
+          }, 100);
+        }, idx * 40);
+      });
+    });
+  }
+
+  // Optional: Add scroll arrows for better UX
+  if (carousel) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    carousel.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - carousel.offsetLeft;
+      scrollLeft = carousel.scrollLeft;
+      carousel.style.cursor = 'grabbing';
+    });
+
+    carousel.addEventListener('mouseleave', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+
+    carousel.addEventListener('mouseup', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+
+    carousel.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      const walk = (x - startX) * 2;
+      carousel.scrollLeft = scrollLeft - walk;
+    });
+  }
+</script>
 
   <!-- 💌 Connect -->
   <section class="mt-12 animate-intro opacity-0 [animation-delay:0.65s]">
